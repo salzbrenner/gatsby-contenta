@@ -9,7 +9,9 @@ import Layout from '../components/layout'
 class IndexPage extends Component {
   render() {
     const { firstRecipe, nextThreeRecipes } = this.props.data
-    const { title: firstTitle } = firstRecipe['edges'][0]['node']
+    const { title: firstTitle } = firstRecipe['edges'][0].node
+    const slug = firstRecipe['edges'][0].node.fields.slug
+    const firstImageSrc = firstRecipe['edges'][0].node.relationships.image.relationships.imageFile.localFile.childImageSharp.resize.src
     console.log(firstRecipe['edges'][0]['node'])
     return (
       <Layout>
@@ -24,14 +26,16 @@ class IndexPage extends Component {
               border: `solid 1px ${colors.black}`,
               transition: `transform 0.2s ease`,
             }}>
-              {firstRecipe.edges.title}
+              <a href={slug} css={{ display: 'block' }}>
+                <img css={{width: `100%`}} src={firstImageSrc} alt={firstTitle}/>
+                <h1 css={{ textAlign: 'center' }}>{firstTitle}</h1>
+              </a>
             </div>
-
           </GridRow>
-
 
           {nextThreeRecipes.edges.map(recipe => {
             const { title, id, totalTime, difficulty } = recipe.node
+            console.log(recipe.node)
             const { slug } = recipe.node.fields
             const imageSrc = recipe.node.relationships.image.relationships.imageFile.localFile.childImageSharp.resize.src
             return (
@@ -75,7 +79,7 @@ export const pageQuery = graphql`
                 imageFile {
                   localFile {
                       childImageSharp {
-                        resize(height: 200) {
+                        resize(width: 1200, height: 500) {
                           src
                         }
                       }
@@ -96,6 +100,8 @@ export const pageQuery = graphql`
         node {
           id,
           title,
+          totalTime,
+          difficulty,
           fields {
             slug
           }
