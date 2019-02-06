@@ -1,23 +1,21 @@
 import React from 'react'
 import GridContainer from '../components/grid-container'
-import GridRow from '../components/grid-row'
 import { colors } from '../utils/colors'
-import { graphql } from 'gatsby';
+import { graphql } from 'gatsby'
 import Layout from '../components/layout'
 
 const RecipeTemplate = ({ data }) => {
   const {
     title,
-    totalTime,
-    preparationTime,
-    instructions,
-    ingredients,
-    difficulty,
-  } = data.recipes
-
+    field_cooking_time: cookTime,
+    field_preparation_time: preparationTime,
+    field_recipe_instruction: instructions,
+    field_ingredients: ingredients,
+    field_difficulty: difficulty,
+  } = data.nodeRecipe
   const imageSrc =
-    data.recipes.relationships.image.relationships.imageFile.localFile
-      .childImageSharp.sizes.src;
+    data.nodeRecipe.relationships.field_image.localFile.childImageSharp.sizes
+      .src
 
   return (
     <Layout>
@@ -48,6 +46,7 @@ const RecipeTemplate = ({ data }) => {
               border: `solid 1px ${colors.black}`,
             }}
             src={imageSrc}
+            alt={title}
           />
         </div>
 
@@ -91,15 +90,15 @@ const RecipeTemplate = ({ data }) => {
           </h1>
 
           <div>
-          <span css={{ textTransform: `capitalize` }}>
-            <strong>Difficulty:</strong> {difficulty} /{' '}
-          </span>
+            <span css={{ textTransform: `capitalize` }}>
+              <strong>Difficulty:</strong> {difficulty} /{' '}
+            </span>
             <span>
-            <strong>Prep time:</strong> {preparationTime} /{' '}
-          </span>
+              <strong>Prep time:</strong> {preparationTime} /{' '}
+            </span>
             <span>
-            <strong>Total time:</strong> {totalTime}
-          </span>
+              <strong>Cook time:</strong> {cookTime}
+            </span>
           </div>
 
           <h2>Ingredients</h2>
@@ -117,7 +116,7 @@ const RecipeTemplate = ({ data }) => {
           </ul>
 
           <h2>Instructions</h2>
-          <p>{instructions}</p>
+          <div dangerouslySetInnerHTML={{ __html: instructions.value }} />
         </div>
       </GridContainer>
     </Layout>
@@ -128,23 +127,21 @@ export default RecipeTemplate
 
 export const query = graphql`
   query RecipeTemplate($slug: String!) {
-    recipes(fields: { slug: { eq: $slug } }) {
+    nodeRecipe(fields: { slug: { eq: $slug } }) {
       title
-      difficulty
-      totalTime
-      preparationTime
-      instructions
-      ingredients
+      field_difficulty
+      field_preparation_time
+      field_ingredients
+      field_cooking_time
+      field_recipe_instruction {
+        value
+      }
       relationships {
-        image {
-          relationships {
-            imageFile {
-              localFile {
-                childImageSharp {
-                  sizes(maxWidth: 1400, maxHeight: 800) {
-                    src
-                  }
-                }
+        field_image {
+          localFile {
+            childImageSharp {
+              sizes(maxHeight: 300, maxWidth: 400) {
+                src
               }
             }
           }

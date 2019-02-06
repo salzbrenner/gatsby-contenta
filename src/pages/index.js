@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Link, graphql } from 'gatsby'
+import { graphql } from 'gatsby'
 import GridContainer from '../components/grid-container'
 import GridRow from '../components/grid-row'
 import RecipeCard from '../components/recipe-card'
@@ -11,42 +11,54 @@ class IndexPage extends Component {
     const { firstRecipe, nextThreeRecipes } = this.props.data
     const { title: firstTitle } = firstRecipe['edges'][0].node
     const slug = firstRecipe['edges'][0].node.fields.slug
-    const firstImageSrc = firstRecipe['edges'][0].node.relationships.image.relationships.imageFile.localFile.childImageSharp.resize.src
-    console.log(firstRecipe['edges'][0]['node'])
+    const firstImageSrc =
+      firstRecipe['edges'][0].node.relationships.field_image.localFile
+        .childImageSharp.resize.src
     return (
       <Layout>
         <GridContainer>
           <GridRow>
-            <div css={{
-              position: `relative`,
-              display: `flex`,
-              flexDirection: `column`,
-              background: colors.white,
-              height: `100%`,
-              border: `solid 1px ${colors.black}`,
-              transition: `transform 0.2s ease`,
-            }}>
+            <div
+              css={{
+                position: `relative`,
+                display: `flex`,
+                flexDirection: `column`,
+                background: colors.white,
+                height: `100%`,
+                border: `solid 1px ${colors.black}`,
+                transition: `transform 0.2s ease`,
+              }}
+            >
               <a href={slug} css={{ display: 'block' }}>
-                <img css={{width: `100%`}} src={firstImageSrc} alt={firstTitle}/>
+                <img
+                  css={{ width: `100%` }}
+                  src={firstImageSrc}
+                  alt={firstTitle}
+                />
                 <h1 css={{ textAlign: 'center' }}>{firstTitle}</h1>
               </a>
             </div>
           </GridRow>
 
           {nextThreeRecipes.edges.map(recipe => {
-            const { title, id, totalTime, difficulty } = recipe.node
-            console.log(recipe.node)
+            const {
+              title,
+              id,
+              field_cooking_time: cookTime,
+              field_preparation_time: prepTime,
+              field_difficulty: difficulty,
+            } = recipe.node
             const { slug } = recipe.node.fields
-            const imageSrc = recipe.node.relationships.image.relationships.imageFile.localFile.childImageSharp.resize.src
+            const imageSrc =
+              recipe.node.relationships.field_image.localFile.childImageSharp
+                .resize.src
             return (
-              <GridRow key={id}
-                       width={32}
-              >
+              <GridRow key={id} width={32}>
                 <RecipeCard
                   title={title}
                   slug={slug}
                   imageSrc={imageSrc}
-                  totalTime={totalTime}
+                  totalTime={cookTime + prepTime}
                   difficulty={difficulty}
                 />
               </GridRow>
@@ -62,84 +74,56 @@ export default IndexPage
 
 export const pageQuery = graphql`
   query IndexPageQuery {
-    firstRecipe: allRecipes(
-    sort: {fields: [createdAt]},
-    limit: 1,
-  ) {
+    firstRecipe: allNodeRecipe(sort: { fields: [created] }, limit: 1) {
       edges {
         node {
-          id,
-          title,
+          id
+          title
           fields {
             slug
           }
           relationships {
-            image {
-              relationships {
-                imageFile {
-                  localFile {
-                      childImageSharp {
-                        resize(width: 1200, height: 500) {
-                          src
-                        }
-                      }
-                    }
+            field_image {
+              localFile {
+                childImageSharp {
+                  resize(height: 300, width: 1200) {
+                    src
+                  }
                 }
               }
             }
           }
-        },
+        }
       }
     }
-  nextThreeRecipes: allRecipes(
-    sort: {fields: [createdAt]},
-    limit: 3,
-    skip: 1,
-  ) {
+    nextThreeRecipes: allNodeRecipe(
+      sort: { fields: [created] }
+      limit: 3
+      skip: 1
+    ) {
       edges {
         node {
-          id,
-          title,
-          totalTime,
-          difficulty,
+          id
+          title
+          field_preparation_time
+          field_cooking_time
+          field_difficulty
           fields {
             slug
           }
           relationships {
-            image {
-              relationships {
-                imageFile {
-                  localFile {
-                      childImageSharp {
-                        resize(height: 200) {
-                          src
-                        }
-                      }
-                    }
+            field_image {
+              localFile {
+                childImageSharp {
+                  resize(height: 200) {
+                    src
+                  }
                 }
               }
             }
           }
-        },
-      }
-    }
-  allMenus {
-    edges {
-      node {
-        label
-        id
-        
+        }
       }
     }
   }
-  allMenuLinks {
-    edges {
-      node {
-        title
-        link
-        bundle
-      }
-    }
-  }
-}
 `

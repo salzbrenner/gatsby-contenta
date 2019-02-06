@@ -1,6 +1,6 @@
 module.exports = {
   siteMetadata: {
-    title: 'Gatsby Default Starter',
+    title: 'Umami',
   },
   plugins: [
     'gatsby-plugin-react-helmet',
@@ -27,7 +27,7 @@ module.exports = {
       resolve: 'gatsby-source-drupal',
       options: {
         baseUrl: 'http://127.0.0.1:8888',
-        apiBase: 'api',
+        apiBase: 'jsonapi',
       },
     },
     {

@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Helmet from 'react-helmet'
 import { StaticQuery, graphql } from 'gatsby'
-import { css } from 'glamor';
+import { css } from 'glamor'
 import { colors } from '../utils/colors'
 
 import Header from './header'
@@ -13,12 +13,12 @@ css.global('html, body', {
   background: 'white',
   fontFamily: 'Libre Franklin',
   color: colors.black,
-});
+})
 
 css.global('a', {
   color: colors.black,
-  textDecoration: 'none'
-});
+  textDecoration: 'none',
+})
 
 const Layout = ({ children }) => (
   <StaticQuery
