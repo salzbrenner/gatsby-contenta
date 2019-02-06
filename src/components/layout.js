@@ -7,6 +7,7 @@ import { colors } from '../utils/colors'
 
 import Header from './header'
 import './normalize.css'
+import SEO from './SEO'
 
 css.global('html, body', {
   padding: 0,
@@ -33,15 +34,6 @@ const Layout = ({ children }) => (
     `}
     render={data => (
       <>
-        <Helmet
-          title={data.site.siteMetadata.title}
-          meta={[
-            { name: 'description', content: 'Sample' },
-            { name: 'keywords', content: 'sample, something' },
-          ]}
-        >
-          <html lang="en" />
-        </Helmet>
         <Header siteTitle={data.site.siteMetadata.title} />
         <div
           style={{

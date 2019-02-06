@@ -4,11 +4,16 @@ import GridContainer from '../components/grid-container'
 import GridRow from '../components/grid-row'
 import { graphql } from 'gatsby'
 import Layout from '../components/layout'
+import SEO from '../components/SEO'
 
 const RecipesPage = ({ data }) => {
   const { edges: recipes } = data.allNodeRecipe
   return (
     <Layout>
+      <SEO
+        title={`Recipes`}
+        description={`Recipes page`}
+      />
       <GridContainer>
         {recipes.map(recipe => {
           const {

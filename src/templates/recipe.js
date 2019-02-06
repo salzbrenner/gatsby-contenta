@@ -3,10 +3,12 @@ import GridContainer from '../components/grid-container'
 import { colors } from '../utils/colors'
 import { graphql } from 'gatsby'
 import Layout from '../components/layout'
+import SEO from '../components/SEO'
 
 const RecipeTemplate = ({ data }) => {
   const {
     title,
+    field_summary,
     field_cooking_time: cookTime,
     field_preparation_time: preparationTime,
     field_recipe_instruction: instructions,
@@ -19,6 +21,11 @@ const RecipeTemplate = ({ data }) => {
 
   return (
     <Layout>
+      <SEO
+        title={title}
+        description={field_summary.value || 'nothin’'}
+        article
+      />
       <GridContainer>
         <div
           css={{
@@ -129,6 +136,9 @@ export const query = graphql`
   query RecipeTemplate($slug: String!) {
     nodeRecipe(fields: { slug: { eq: $slug } }) {
       title
+      field_summary {
+        value
+      }
       field_difficulty
       field_preparation_time
       field_ingredients

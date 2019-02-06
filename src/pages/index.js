@@ -5,6 +5,7 @@ import GridRow from '../components/grid-row'
 import RecipeCard from '../components/recipe-card'
 import { colors } from '../utils/colors'
 import Layout from '../components/layout'
+import SEO from '../components/SEO'
 
 class IndexPage extends Component {
   render() {
@@ -16,6 +17,10 @@ class IndexPage extends Component {
         .childImageSharp.resize.src
     return (
       <Layout>
+        <SEO
+          title={`Welcome to Umami`}
+          description={`A site about cooking`}
+        />
         <GridContainer>
           <GridRow>
             <div

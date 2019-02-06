@@ -1,6 +1,8 @@
 module.exports = {
   siteMetadata: {
     title: 'Umami',
+    defaultDescription: 'A test recipe site with Gatsby and Drupal',
+    titleTemplate: "%s · Umami",
   },
   plugins: [
     'gatsby-plugin-react-helmet',
