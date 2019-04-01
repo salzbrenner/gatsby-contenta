@@ -10,6 +10,16 @@ exports.onCreateNode = ({ node, actions }) => {
   const { createNode, createNodeField } = actions
 
   switch (node.internal.type) {
+    // add some additional fields to our drupal data
+    case `node__article`:
+      // adding a field to article
+      createNodeField({
+        node,
+        name: `hello`,
+        value: `WORLD`,
+      })
+      break
+
     case `node__recipe`:
       const recipeSlug = `${node.path.alias}`
 
@@ -18,10 +28,11 @@ exports.onCreateNode = ({ node, actions }) => {
         name: `slug`,
         value: recipeSlug,
       })
-      allSlugs.push({
-        id: node.internalId,
-        slug: recipeSlug,
-      })
+
+      // allSlugs.push({
+      //   id: node.internalId,
+      //   slug: recipeSlug,
+      // })
       break
 
     // case `menuLinks`:

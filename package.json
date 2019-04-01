@@ -29,10 +29,12 @@
   "scripts": {
     "build": "gatsby build",
     "develop": "gatsby develop",
+    "deck": "mdx-deck deck.mdx",
     "format": "prettier --write \"src/**/*.js\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
+    "mdx-deck": "^2.0.6",
     "prettier": "^1.14.2"
   },
   "repository": {

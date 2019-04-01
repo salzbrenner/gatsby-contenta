@@ -1,0 +1,117 @@
+export { default as theme } from './deck-theme'
+
+# Drupal and Gatsby
+- Drupal and jsonapi
+- What is Gatsby?
+- How does Gatsby work with Drupal?
+
+---
+# JSON API Module
+
+[Has been committed to the development branch of Drupal 8.](https://www.drupal.org/blog/jsonapi-lands-in-drupal-core)
+
+
+JSON:API is entirely entity-based. That is, it can't process business rules or do things which can't be thought of as "CRUD". Business logic, like registering a new account, logging in a user, or requesting a new password are not part of JSON:API. Many of these are already provided by Drupal core.
+
+JSON:API provides a "link" object at the top level, which links to other "resources", which is a `response document`, which is the response body.
+
+http://127.0.0.1:8888/jsonapi
+
+http://127.0.0.1:8888/jsonapi/node/article
+
+---
+# Gatsby.js
+
+Gatsby is a static-site builder. It takes a data source, queries it using graphql if necessary, and builds a static site.
+
+Some advantages of JAMstack in general:
+- No database
+- Better performance - doesn't build pages on the fly
+- Cheap hosting/scaling
+
+---
+
+# Gatsby and graphql
+
+Most people run GraphQL on a server to respond live to requests for data from clients. You define a schema (a schema is a formal way of describing the shape of your data) for your GraphQL server and then your GraphQL resolvers retrieve data from databases and/or other APIs.
+
+Gatsby uses GraphQL at build-time and not for live sites. This is unique, and it means you don’t need to run additional services (e.g. a database and Node.js service) to use GraphQL for production websites.
+
+---
+graphql
+
+http://localhost:8000/___graphql
+
+Query the site title (set in gatsby-config)
+```$xslt
+  site {
+      siteMetadata{
+        title
+      }
+    }
+```
+---
+## Where does Gatsby’s GraphQL schema come from?
+https://www.gatsbyjs.org/docs/querying-with-graphql/
+
+Most usages of GraphQL involve manually creating a GraphQL schema.
+
+With Gatsby, we use plugins which fetch data from different sources. We then use that data to automatically infer a GraphQL schema.
+
+---
+
+# Gatsby and Drupal
+
+Gatsby uses the `gatsby-source-drupal` plugin to automatically create a GraphQL schema that we query across the app/site.
+
+Looking at the source code, basically the plugin fetches jsonapi.links (the top level object from JSONAPI), then iterates over the collected data and uses Gatsby API to create nodes (objects).
+
+---
+
+graphql - after hooking up `gatsby-source-drupal`
+
+Query some data from drupal
+```$xslt
+allNodeArticle {
+      edges {
+        node {
+          body {
+            value
+          }
+          fields {
+            hello
+          }
+        }
+      }
+    }
+```
+---
+
+With Gatsby's baked in graphQL functionality, we can easily pull data in to our templates. Queried data is passed as `data` to each component's `props`.
+
+```jsx
+export default ({ data }) => (
+  <div>
+    <h1>About {data.site.siteMetadata.title}</h1>
+    <p>We're a very cool website you should return to often.</p>
+  </div>
+)
+
+export const query = graphql`
+  query {
+    site {
+      siteMetadata {
+        title
+      }
+    }
+  }
+` 
+```
+---
+# Conclusions
+
+- For UI, using as a complement rather than the driving force of the project is a likely use case.
+
+- A large amount of data could be static, but dynamic data would need typical JS implementation.
+
+- Otherwise a build/deploy CI process for which there are many options.
